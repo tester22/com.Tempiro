@@ -1,0 +1,13 @@
+{
+  "name": "com.tempiro",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {
+    "homey": "^2.9.0"
+  },
+  "dependencies": {
+    "homey-meshdriver": "^2.0.1",
+    "homey-zigbeedriver": "^1.6.2",
+    "zigbee-clusters": "^1.4.0"
+  }
+}
