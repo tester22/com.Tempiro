@@ -20,6 +20,26 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
       await this.addCapability('alarm_battery');
     }
         
+    if (typeof this.meteringFactor !== 'number') {
+    const { multiplier, divisor } = await zclNode.endpoints[
+        this.getClusterEndpoint(CLUSTER.METERING)
+      ]
+      .clusters[CLUSTER.METERING.NAME]
+      .readAttributes('multiplier', 'divisor');
+  
+    this.meteringFactor = multiplier / divisor;
+   }
+   
+   if (typeof this.activePowerFactor !== 'number') {
+    const { acPowerMultiplier, acPowerDivisor } = await zclNode.endpoints[
+        this.getClusterEndpoint(CLUSTER.ELECTRICAL_MEASUREMENT)
+      ]
+      .clusters[CLUSTER.ELECTRICAL_MEASUREMENT.NAME]
+      .readAttributes('acPowerMultiplier', 'acPowerDivisor');
+  
+    this.activePowerFactor = acPowerMultiplier / acPowerDivisor;
+    }
+   
   }
 }
 
