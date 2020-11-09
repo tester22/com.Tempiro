@@ -19,26 +19,50 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
     if (!this.hasCapability('alarm_battery')) {
       await this.addCapability('alarm_battery');
     }
-        
-    if (typeof this.meteringFactor !== 'number') {
-    const { multiplier, divisor } = await zclNode.endpoints[
-        this.getClusterEndpoint(CLUSTER.METERING)
-      ]
-      .clusters[CLUSTER.METERING.NAME]
-      .readAttributes('multiplier', 'divisor');
-  
-    this.meteringFactor = multiplier / divisor;
-   }
+
+    // Register measure_battery capability and configure attribute reporting
+    this.batteryThreshold = 20;
+    this.registerCapability('alarm_battery', CLUSTER.POWER_CONFIGURATION, {
+      getOpts: {
+        getOnStart: true,
+      },
+      reportOpts: {
+        configureAttributeReporting: {
+          minInterval: 0, // No minimum reporting interval
+          maxInterval: 60000, // Maximally every ~16 hours
+          minChange: 5, // Report when value changed by 5
+        },
+      },
+    });
+    
+    this.registerCapability('measure_battery', CLUSTER.POWER_CONFIGURATION, {
+      getOpts: {
+        getOnStart: true,
+      },
+      reportOpts: {
+        configureAttributeReporting: {
+          minInterval: 0, // No minimum reporting interval
+          maxInterval: 60, // Maximally every ~16 hours
+          minChange: 0, // Report when value changed by 5
+        },
+      },
+    });
+    
+    
+this.registerCapability('meter_power', CLUSTER.METERING, {
+      getOpts: {
+        getOnStart: true,
+      },
+      reportOpts: {
+        configureAttributeReporting: {
+          minInterval: 0, // No minimum reporting interval
+          maxInterval: 60, // Maximally every ~16 hours
+          minChange: 0, // Report when value changed by 5
+        },
+      },
+    });
    
-   if (typeof this.activePowerFactor !== 'number') {
-    const { acPowerMultiplier, acPowerDivisor } = await zclNode.endpoints[
-        this.getClusterEndpoint(CLUSTER.ELECTRICAL_MEASUREMENT)
-      ]
-      .clusters[CLUSTER.ELECTRICAL_MEASUREMENT.NAME]
-      .readAttributes('acPowerMultiplier', 'acPowerDivisor');
-  
-    this.activePowerFactor = acPowerMultiplier / acPowerDivisor;
-    }
+   
    
   }
 }

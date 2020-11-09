@@ -1,0 +1,24 @@
+{
+  "id": "com.tempiro",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "name": {
+    "en": "Tempiro"
+  },
+  "description": {
+    "en": "Add support for Tempiro Devices."
+  },
+  "category": [
+    "appliances"
+  ],
+  "permissions": [],
+  "images": {
+    "large": "/assets/images/large.png",
+    "small": "/assets/images/small.png"
+  },
+  "author": {
+    "name": "Anton Delitsch",
+    "email": "anton@trugen.net"
+  }
+}
