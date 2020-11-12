@@ -6,11 +6,10 @@
   "class": "socket",
   "capabilities": [
     "measure_battery",
-    "measure_current",
+    "alarm_battery",
     "measure_power",
     "meter_power",
-    "onoff",
-    "measure_voltage"
+    "onoff"
   ],
   "capabilitiesOptions": {
     "measure_power": {
@@ -23,13 +22,27 @@
     "deviceId": 81,
     "profileId": 260,
     "endpoints": {
-          "1": {
-            "clusters": [0, 1, 4, 5, 6, 8, 1794, 2820, 26],
-            "bindings": [
-          0, 1, 1794, 2820, 26
+      "1": {
+        "clusters": [
+          0,
+          1,
+          4,
+          5,
+          6,
+          8,
+          1794,
+          2820,
+          26
+        ],
+        "bindings": [
+          0,
+          1,
+          1794,
+          2820,
+          26
         ]
-          }
-        },
+      }
+    },
     "learnmode": {
       "image": "/drivers/smart-fuse/assets/images/learn.svg",
       "instruction": {

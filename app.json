@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
+  "brandColor": "#47a74b",
   "name": {
     "en": "Tempiro"
   },
@@ -31,11 +32,10 @@
       "class": "socket",
       "capabilities": [
         "measure_battery",
-        "measure_current",
+        "alarm_battery",
         "measure_power",
         "meter_power",
-        "onoff",
-        "measure_voltage"
+        "onoff"
       ],
       "capabilitiesOptions": {
         "measure_power": {

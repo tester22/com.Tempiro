@@ -1,9 +1,7 @@
 'use strict';
 
-const { CLUSTER } = require('zigbee-clusters');
+const { CLUSTER, debug } = require('zigbee-clusters');
 const { ZigBeeDevice } = require('homey-zigbeedriver');
-
-const { debug } = require('zigbee-clusters');
 
 // Enable debug logging of all relevant Zigbee communication
 debug(true);
@@ -15,55 +13,7 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
     // Register onoff capability
     this.registerCapability('onoff', CLUSTER.ON_OFF);
     
-    // Migration step, adds measure_battery capability if not already available
-    if (!this.hasCapability('alarm_battery')) {
-      await this.addCapability('alarm_battery');
-    }
 
-    // Register measure_battery capability and configure attribute reporting
-    this.batteryThreshold = 20;
-    this.registerCapability('alarm_battery', CLUSTER.POWER_CONFIGURATION, {
-      getOpts: {
-        getOnStart: true,
-      },
-      reportOpts: {
-        configureAttributeReporting: {
-          minInterval: 0, // No minimum reporting interval
-          maxInterval: 60000, // Maximally every ~16 hours
-          minChange: 5, // Report when value changed by 5
-        },
-      },
-    });
-    
-    this.registerCapability('measure_battery', CLUSTER.POWER_CONFIGURATION, {
-      getOpts: {
-        getOnStart: true,
-      },
-      reportOpts: {
-        configureAttributeReporting: {
-          minInterval: 0, // No minimum reporting interval
-          maxInterval: 60, // Maximally every ~16 hours
-          minChange: 0, // Report when value changed by 5
-        },
-      },
-    });
-    
-    
-this.registerCapability('meter_power', CLUSTER.METERING, {
-      getOpts: {
-        getOnStart: true,
-      },
-      reportOpts: {
-        configureAttributeReporting: {
-          minInterval: 0, // No minimum reporting interval
-          maxInterval: 60, // Maximally every ~16 hours
-          minChange: 0, // Report when value changed by 5
-        },
-      },
-    });
-   
-   
-   
   }
 }
 
