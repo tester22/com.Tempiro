@@ -9,14 +9,42 @@ debug(true);
 class TempiroSmartFuseDevice extends ZigBeeDevice {
 
   async onNodeInit({ zclNode }) {
+    // enable debugging
+    this.enableDebug();
+
+    // Enables debug logging in zigbee-clusters
+    debug(true);
+
+    // print the node's info to the console
     this.printNode();
-    // Register onoff capability
+
     this.registerCapability('onoff', CLUSTER.ON_OFF);
+
+    this.registerCapability('measure_battery', CLUSTER.POWER_CONFIGURATION);
+
+    // measure_power
     
+    if (this.hasCapability('measure_power')) {
+      this.registerCapability('measure_power', CLUSTER.ELECTRICAL_MEASUREMENT, {
+        getOpts: {
+          getOnStart: false
+          },
+        endpoint: this.getClusterEndpoint(CLUSTER.ELECTRICAL_MEASUREMENT),
+      });
+    }
+    
+
+    if (this.hasCapability('meter_power')) {
+      this.registerCapability('meter_power', CLUSTER.METERING, {
+        getOpts: {
+          getOnStart: false
+          },
+        endpoint: this.getClusterEndpoint(CLUSTER.METERING),
+      });
+    }
 
   }
 }
-
 /*
 2020-11-02 08:57:49 [log] [ManagerDrivers] [smart-fuse] [0] ZigBeeDevice has been inited
 2020-11-02 08:57:49 [log] [ManagerDrivers] [smart-fuse] [0] ------------------------------------------
