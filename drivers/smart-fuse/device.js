@@ -1,10 +1,11 @@
 'use strict';
 
-const { CLUSTER, debug } = require('zigbee-clusters');
-const { ZigBeeDevice } = require('homey-zigbeedriver');
+const Homey = require('homey');
 
-// Enable debug logging of all relevant Zigbee communication
-debug(true);
+const { ZigBeeDevice } = require('homey-zigbeedriver');
+const {
+  zclNode, debug, Cluster, CLUSTER,
+} = require('zigbee-clusters');
 
 class TempiroSmartFuseDevice extends ZigBeeDevice {
 
@@ -18,32 +19,110 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
     // print the node's info to the console
     this.printNode();
 
-    this.registerCapability('onoff', CLUSTER.ON_OFF);
-
-    this.registerCapability('measure_battery', CLUSTER.POWER_CONFIGURATION);
+    if (this.hasCapability('onoff')) {
+      this.registerCapability('onoff', CLUSTER.ON_OFF, {
+        reportOpts: {
+          configureAttributeReporting: {
+            minInterval: 0, // No minimum reporting interval
+            maxInterval: 43200, // Maximally every ~12 hours
+            minChange: 1, // Report when value changed by 5
+          },
+        },
+        endpoint: this.getClusterEndpoint(CLUSTER.ON_OFF),
+      });
+    }
 
     // measure_power
-    
     if (this.hasCapability('measure_power')) {
       this.registerCapability('measure_power', CLUSTER.ELECTRICAL_MEASUREMENT, {
-        getOpts: {
-          getOnStart: false
-          },
+        getOpts: { getOnStart: false },
         endpoint: this.getClusterEndpoint(CLUSTER.ELECTRICAL_MEASUREMENT),
       });
     }
-    
 
     if (this.hasCapability('meter_power')) {
       this.registerCapability('meter_power', CLUSTER.METERING, {
-        getOpts: {
-          getOnStart: false
-          },
+        getOpts: { getOnStart: false },
         endpoint: this.getClusterEndpoint(CLUSTER.METERING),
       });
     }
 
+    // Try to initialize AttributeReporting for electricaMeasurement and metering clusters
+    try {
+      await this._configureMeterAttributeReporting({ zclNode });
+    } catch (err) {
+      this.error('failed to configure AttributeReporting', err);
+    }
   }
+
+  async _configureMeterAttributeReporting({ zclNode }) {
+    this.debug('--  initializing attribute reporting for the electricaMeasurement cluster');
+
+    const electricalMeasurementAttributeArray = [];
+
+    // Define the relevant attributes to read depending on the defined capabilities and availability of the factors in the Store
+    const attributesToRead = [];
+    /*
+    if (this.hasCapability('measure_power') && typeof this.getStoreValue('activePowerFactor') !== 'number') {
+      attributesToRead.push('acPowerMultiplier', 'acPowerDivisor');
+    }
+    */
+
+    // Actually read the required attributes
+    if (attributesToRead.length !== 0) {
+      //var attrs = await this.zclNode.endpoints[this.getClusterEndpoint(CLUSTER.ELECTRICAL_MEASUREMENT)].clusters[CLUSTER.ELECTRICAL_MEASUREMENT.NAME].readAttributes(...attributesToRead);
+      this.debug('--- Read reporting divisors and multipliers:', attrs);
+    }
+
+    // Re-iterate over the different capabilities and define the required report factors, add them to the Array and store them.
+    if (this.hasCapability('measure_power')) {
+      //if (typeof this.getStoreValue('activePowerFactor') !== 'number') {
+        this.activePowerFactor = 1;
+        //this.setStoreValue('activePowerFactor', this.activePowerFactor);
+        electricalMeasurementAttributeArray.push({
+          cluster: CLUSTER.ELECTRICAL_MEASUREMENT,
+          attributeName: 'activePower',
+          minInterval: 0,
+          maxInterval: 300,
+          minChange: 1 / this.activePowerFactor,
+          endpointId: this.getClusterEndpoint(CLUSTER.ELECTRICAL_MEASUREMENT),
+        });
+      //} else {
+      //  this.activePowerFactor = this.getStoreValue('activePowerFactor');
+      //}
+    }
+
+    // When there are Attributes to be configured, configure them
+    if (electricalMeasurementAttributeArray.length !== 0) {
+      await this.configureAttributeReporting(electricalMeasurementAttributeArray);
+    }
+
+    this.debug('--  initializing attribute reporting for the metering cluster');
+    const meteringAttributeArray = [];
+
+    if (this.hasCapability('meter_power')) {
+      //if (typeof this.getStoreValue('meteringFactor') !== 'number') {
+        //const { multiplier, divisor } = await this.zclNode.endpoints[this.getClusterEndpoint(CLUSTER.METERING)].clusters[CLUSTER.METERING.NAME].readAttributes('multiplier', 'divisor');
+        this.meteringFactor = 1;
+        this.setStoreValue('meteringFactor', this.meteringFactor);
+        meteringAttributeArray.push({
+          cluster: CLUSTER.METERING,
+          attributeName: 'currentSummationDelivered',
+          minInterval: 0,
+          maxInterval: 300,
+          minChange: 0.01 / this.meteringFactor,
+          endpointId: this.getClusterEndpoint(CLUSTER.METERING),
+        });
+      //} else {
+      //  this.meteringFactor = this.getStoreValue('meteringFactor');
+      //}
+    }
+
+    if (meteringAttributeArray.length !== 0) {
+      await this.configureAttributeReporting(meteringAttributeArray);
+    }
+  }
+
 }
 /*
 2020-11-02 08:57:49 [log] [ManagerDrivers] [smart-fuse] [0] ZigBeeDevice has been inited

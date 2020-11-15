@@ -18,40 +18,32 @@
   "zigbee": {
     "manufacturerName": "Tem",
     "productId": "ZHA-SmartPlug",
-    "deviceId": 81,
-    "profileId": 260,
     "endpoints": {
       "1": {
         "clusters": [
           0,
-          1,
-          4,
-          5,
           6,
-          8,
+          9,
           1794,
-          2820,
-          26
+          2820
         ],
         "bindings": [
-          0,
-          1,
+          6,
           1794,
-          2820,
-          26
+          2820
         ]
       }
     },
     "learnmode": {
-      "image": "/drivers/smart-fuse/assets/images/learn.png",
+      "image": "{{driverAssetsPath}}/images/learn.png",
       "instruction": {
         "en": "Long press the power button to open more than 5 seconds until the led flashes red one time and then flashes blue three times"
       }
     }
   },
   "images": {
-    "large": "/drivers/smart-fuse/assets/images/large.png",
-    "small": "/drivers/smart-fuse/assets/images/small.png"
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "small": "{{driverAssetsPath}}/images/small.png"
   },
   "settings": []
 }

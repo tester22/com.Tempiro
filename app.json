@@ -44,27 +44,19 @@
       "zigbee": {
         "manufacturerName": "Tem",
         "productId": "ZHA-SmartPlug",
-        "deviceId": 81,
-        "profileId": 260,
         "endpoints": {
           "1": {
             "clusters": [
               0,
-              1,
-              4,
-              5,
               6,
-              8,
+              9,
               1794,
-              2820,
-              26
+              2820
             ],
             "bindings": [
-              0,
-              1,
+              6,
               1794,
-              2820,
-              26
+              2820
             ]
           }
         },
