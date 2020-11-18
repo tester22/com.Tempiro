@@ -34,7 +34,8 @@
     "learnmode": {
       "image": "{{driverAssetsPath}}/images/learn.png",
       "instruction": {
-        "en": "Long press the power button to open more than 5 seconds until the led flashes red one time and then flashes blue three times"
+        "en": "Press the reset button located under the lid 1 time to start inclusion. Press the reset button 6 times to force an complete reset.",
+        "sv": "Tryck på återställningsknappen under locket 1 gång för att börja inkluderingen. Tryck på återställningsknappen 6 gånger för att göra en total återställning."
       }
     }
   },
