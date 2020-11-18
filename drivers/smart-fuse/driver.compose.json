@@ -6,6 +6,7 @@
   "class": "socket",
   "capabilities": [
     "alarm_battery",
+    "alarm_fuse",
     "measure_power",
     "meter_power",
     "onoff"
@@ -41,5 +42,25 @@
     "large": "{{driverAssetsPath}}/images/large.png",
     "small": "{{driverAssetsPath}}/images/small.png"
   },
-  "settings": []
+  "settings": [{
+    "type": "group",
+    "label": {
+      "en": "General settings"
+    },
+    "children": [
+      {
+        "id": "reportfuse",
+        "type": "checkbox",
+        "value": true,
+        "label": {
+          "en": "Report on fuse errors",
+          "sv": "Rapportera säkringsfel"
+        },
+        "hint": {
+          "en": "Report is the fuse is considered broken",
+          "sv": "Rapportera om säkringen är sönder"
+        }
+      }
+    ]
+  }]
 }

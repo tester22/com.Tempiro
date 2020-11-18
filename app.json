@@ -32,6 +32,7 @@
       "class": "socket",
       "capabilities": [
         "alarm_battery",
+        "alarm_fuse",
         "measure_power",
         "meter_power",
         "onoff"
@@ -67,7 +68,55 @@
         "large": "/drivers/smart-fuse/assets/images/large.png",
         "small": "/drivers/smart-fuse/assets/images/small.png"
       },
-      "settings": []
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "General settings"
+          },
+          "children": [
+            {
+              "id": "reportfuse",
+              "type": "checkbox",
+              "value": true,
+              "label": {
+                "en": "Report on fuse errors",
+                "sv": "Rapportera säkringsfel"
+              },
+              "hint": {
+                "en": "Report is the fuse is considered broken",
+                "sv": "Rapportera om säkringen är sönder"
+              }
+            }
+          ]
+        }
+      ]
     }
-  ]
+  ],
+  "capabilities": {
+    "alarm_fuse": {
+      "type": "boolean",
+      "uiComponent": "sensor",
+      "icon": "/assets/capabilities/alarm_fuse.svg",
+      "title": {
+        "en": "Fuse Alarm",
+        "sv": "Säkringslarm"
+      },
+      "desc": {
+        "en": "Detect broken fuse",
+        "sv": "Upptäck felaktig säkring"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "insightsTitleTrue": {
+        "en": "Fuse alarm turned on",
+        "sv": "Säkringslarm aktiverat"
+      },
+      "insightsTitleFalse": {
+        "en": "Fuse alarm turned off",
+        "sv": "Säkringslarm avaktiverat"
+      }
+    }
+  }
 }

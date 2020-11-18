@@ -1,0 +1,24 @@
+{
+    "type": "boolean",
+    "uiComponent": "sensor",
+    "icon": "/assets/capabilities/alarm_fuse.svg",
+    "title": {
+      "en": "Fuse Alarm",
+      "sv": "Säkringslarm"
+    },
+    "desc": {
+      "en": "Detect broken fuse",
+      "sv": "Upptäck felaktig säkring"
+    },
+    "getable": true,
+    "setable": false,
+    "insights": true,
+    "insightsTitleTrue": {
+      "en": "Fuse alarm turned on",
+      "sv": "Säkringslarm aktiverat"
+    },
+    "insightsTitleFalse": {
+      "en": "Fuse alarm turned off",
+      "sv": "Säkringslarm avaktiverat"
+    }
+  }

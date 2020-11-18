@@ -7,19 +7,6 @@
   "name": {
     "en": "Tempiro"
   },
-  "capabilities": {
-    "alarm_fuse": {
-      "type": "boolean",
-      "title": {
-        "en": "Fuse alarm"
-      },
-      "getable": true,
-      "setable": true,
-      "uiComponent": "toggle",
-      "uiQuickAction": true,
-      "icon": "/assets/my_boolean_capability.svg"
-    }
-  },
   "description": {
     "en": "Add support for Tempiro Devices."
   },

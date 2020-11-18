@@ -9,15 +9,35 @@ const {
 
 class TempiroSmartFuseDevice extends ZigBeeDevice {
 
+  onSettings(oldSettingsObj, newSettingsObj, changedKeysArr, callback) {
+    if (changedKeysArr.includes('reportfuse')) {
+      this.setCapabilityValue('alarm_fuse', null);
+    }
+  }
+
   async onNodeInit({ zclNode }) {
     // enable debugging
-    this.enableDebug();
+    //this.enableDebug();
 
     // Enables debug logging in zigbee-clusters
-    debug(true);
+    //debug(true);
 
     // print the node's info to the console
-    this.printNode();
+    //this.printNode();
+
+    if (!this.hasCapability('measure_power')) {
+      this.addCapability('measure_power');
+    }
+    if (!this.hasCapability('meter_power')) {
+      this.addCapability('meter_power');
+    }
+    if (!this.hasCapability('alarm_battery')) {
+      this.addCapability('alarm_battery');
+    }
+    if (!this.hasCapability('alarm_fuse')) {
+      this.addCapability('alarm_fuse');
+    }
+
 
     if (this.hasCapability('onoff')) {
       this.registerCapability('onoff', CLUSTER.ON_OFF, {
@@ -32,13 +52,11 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
       });
     }
 
-
       zclNode.endpoints[1].clusters.metering.on('attr.currentSummationDelivered', (currentMetering) => {
-        const parsedMetering = currentMetering / 10000;
+        const parsedMetering = currentMetering / 1000;
         // Do something with the received attribute report
         this.log("Reported metering value " + currentMetering);
         this.setCapabilityValue('meter_power', parsedMetering);
-          // alarm fuse
       });
   
 
@@ -48,18 +66,21 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
       if (currentDemand == "-10"){
         this.log("battery alarm");
         this.setCapabilityValue('alarm_battery', true);
-      } else if (currentDemand == "-20"){
-        //this.setCapabilityValue('alarm_battery', true);
+      } else if (currentDemand == "-20" && this.getSetting('reportfuse')){
         this.log("fuze alarm");
+        this.setCapabilityValue('alarm_fuse', true);
         // Alarm fuse
       } else if (currentDemand == "-30"){
           this.log("battery alarm");
-          this.log("fuze alarm");
           this.setCapabilityValue('alarm_battery', true);
-          // alarm fuse
+          if (this.getSetting('reportfuse') == true) {
+            this.log("fuze alarm");
+            this.setCapabilityValue('alarm_fuse', true);
+          }
       } else {
         const parsedDemand = currentDemand / 10;
         this.setCapabilityValue('alarm_battery', false);
+        this.setCapabilityValue('alarm_fuse', false);
         this.setCapabilityValue('measure_power', parsedDemand);
     }
     });
