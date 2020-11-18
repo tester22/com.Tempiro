@@ -9,12 +9,6 @@ const {
 
 class TempiroSmartFuseDevice extends ZigBeeDevice {
 
-  onSettings(oldSettingsObj, newSettingsObj, changedKeysArr, callback) {
-    if (changedKeysArr.includes('reportfuse')) {
-      this.setCapabilityValue('alarm_fuse', null);
-    }
-  }
-
   async onNodeInit({ zclNode }) {
     // enable debugging
     //this.enableDebug();
