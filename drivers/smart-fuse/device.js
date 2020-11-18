@@ -39,7 +39,7 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
           configureAttributeReporting: {
             minInterval: 0, // No minimum reporting interval
             maxInterval: 43200, // Maximally every ~12 hours
-            minChange: 1, // Report when value changed by 5
+            minChange: 1,
           },
         },
         endpoint: this.getClusterEndpoint(CLUSTER.ON_OFF),
@@ -47,7 +47,7 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
     }
 
       zclNode.endpoints[1].clusters.metering.on('attr.currentSummationDelivered', (currentMetering) => {
-        const parsedMetering = currentMetering / 1000;
+        const parsedMetering = currentMetering / this.getSetting('meassureFactor');
         // Do something with the received attribute report
         this.log("Reported metering value " + currentMetering);
         this.setCapabilityValue('meter_power', parsedMetering);
@@ -60,9 +60,11 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
       if (currentDemand == "-10"){
         this.log("battery alarm");
         this.setCapabilityValue('alarm_battery', true);
-      } else if (currentDemand == "-20" && this.getSetting('reportfuse')){
-        this.log("fuze alarm");
-        this.setCapabilityValue('alarm_fuse', true);
+      } else if (currentDemand == "-20" ){
+        if (this.getSetting('reportfuse') == true) {
+          this.log("fuze alarm");
+          this.setCapabilityValue('alarm_fuse', true);
+        }
         // Alarm fuse
       } else if (currentDemand == "-30"){
           this.log("battery alarm");
@@ -72,7 +74,7 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
             this.setCapabilityValue('alarm_fuse', true);
           }
       } else {
-        const parsedDemand = currentDemand / 10;
+        const parsedDemand = currentDemand / this.getSetting('activePowerFactor');
         this.setCapabilityValue('alarm_battery', false);
         this.setCapabilityValue('alarm_fuse', false);
         this.setCapabilityValue('measure_power', parsedDemand);

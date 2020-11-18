@@ -60,7 +60,27 @@
           "en": "Report is the fuse is considered broken",
           "sv": "Rapportera om säkringen är sönder"
         }
+      },
+      {
+        "id": "activePowerFactor",
+        "type": "number",
+        "value": 10,
+        "label": {
+          "en": "Meter conversion factor",
+          "sv": "Effekt omvandlingsfaktor"
+        }
+      },
+      {
+        "id": "meassureFactor",
+        "type": "number",
+        "value": 1000,
+        "label": {
+          "en": "Meassure conversion factor",
+          "sv": "Energi omvandlingsfaktor"
+        }
       }
+
+
     ]
   }]
 }
