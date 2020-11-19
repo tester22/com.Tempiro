@@ -1,5 +1,8 @@
 {
   "1.0.0": {
     "en": "Initial version with support for Smart Fuse."
+  },
+  "1.0.1": {
+    "en": "Added readme and corrected images"
   }
 }
