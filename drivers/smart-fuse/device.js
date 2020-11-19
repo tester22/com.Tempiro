@@ -11,13 +11,13 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
 
   async onNodeInit({ zclNode }) {
     // enable debugging
-    //this.enableDebug();
+    // this.enableDebug();
 
     // Enables debug logging in zigbee-clusters
-    //debug(true);
+    // debug(true);
 
     // print the node's info to the console
-    //this.printNode();
+    // this.printNode();
 
     if (!this.hasCapability('measure_power')) {
       this.addCapability('measure_power');
@@ -32,7 +32,6 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
       this.addCapability('alarm_fuse');
     }
 
-
     if (this.hasCapability('onoff')) {
       this.registerCapability('onoff', CLUSTER.ON_OFF, {
         reportOpts: {
@@ -46,41 +45,41 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
       });
     }
 
-      zclNode.endpoints[1].clusters.metering.on('attr.currentSummationDelivered', (currentMetering) => {
-        const parsedMetering = currentMetering / this.getSetting('meassureFactor');
-        // Do something with the received attribute report
-        this.log("Reported metering value " + currentMetering);
-        this.setCapabilityValue('meter_power', parsedMetering);
-      });
-  
-
-    zclNode.endpoints[1].clusters.metering.on('attr.instantaneousDemand', (currentDemand) => {
+    zclNode.endpoints[1].clusters.metering.on('attr.currentSummationDelivered', currentMetering => {
+      const parsedMetering = currentMetering / this.getSetting('meassureFactor');
       // Do something with the received attribute report
-      this.log("Reported demand " + currentDemand);
-      if (currentDemand == "-10"){
-        this.log("battery alarm");
+      this.log(`Reported metering value ${currentMetering}`);
+      this.setCapabilityValue('meter_power', parsedMetering);
+    });
+
+    zclNode.endpoints[1].clusters.metering.on('attr.instantaneousDemand', currentDemand => {
+      // Do something with the received attribute report
+      this.log(`Reported demand ${currentDemand}`);
+      if (currentDemand === '-10') {
+        this.log('battery alarm');
         this.setCapabilityValue('alarm_battery', true);
-      } else if (currentDemand == "-20" ){
-        if (this.getSetting('reportfuse') == true) {
-          this.log("fuze alarm");
+      } else if (currentDemand === '-20') {
+        if (this.getSetting('reportfuse') === true) {
+          this.log('fuze alarm');
           this.setCapabilityValue('alarm_fuse', true);
         }
         // Alarm fuse
-      } else if (currentDemand == "-30"){
-          this.log("battery alarm");
-          this.setCapabilityValue('alarm_battery', true);
-          if (this.getSetting('reportfuse') == true) {
-            this.log("fuze alarm");
-            this.setCapabilityValue('alarm_fuse', true);
-          }
+      } else if (currentDemand === '-30') {
+        this.log('battery alarm');
+        this.setCapabilityValue('alarm_battery', true);
+        if (this.getSetting('reportfuse') === true) {
+          this.log('fuze alarm');
+          this.setCapabilityValue('alarm_fuse', true);
+        }
       } else {
         const parsedDemand = currentDemand / this.getSetting('activePowerFactor');
         this.setCapabilityValue('alarm_battery', false);
         this.setCapabilityValue('alarm_fuse', false);
         this.setCapabilityValue('measure_power', parsedDemand);
-    }
+      }
     });
-  } 
+  }
+
 }
 /*
 2020-11-02 08:57:49 [log] [ManagerDrivers] [smart-fuse] [0] ZigBeeDevice has been inited
@@ -132,7 +131,5 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
 2020-11-02 08:57:49 [log] [ManagerDrivers] [smart-fuse] [0] ------------------------------------------
 
 */
-
-
 
 module.exports = TempiroSmartFuseDevice;
