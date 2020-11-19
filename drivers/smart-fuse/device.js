@@ -55,16 +55,15 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
     zclNode.endpoints[1].clusters.metering.on('attr.instantaneousDemand', currentDemand => {
       // Do something with the received attribute report
       this.log(`Reported demand ${currentDemand}`);
-      if (currentDemand === '-10') {
+      if (currentDemand === -10) {
         this.log('battery alarm');
         this.setCapabilityValue('alarm_battery', true);
-      } else if (currentDemand === '-20') {
+      } else if (currentDemand === -20) {
         if (this.getSetting('reportfuse') === true) {
           this.log('fuze alarm');
           this.setCapabilityValue('alarm_fuse', true);
         }
-        // Alarm fuse
-      } else if (currentDemand === '-30') {
+      } else if (currentDemand === -30) {
         this.log('battery alarm');
         this.setCapabilityValue('alarm_battery', true);
         if (this.getSetting('reportfuse') === true) {
