@@ -1,1 +1,1 @@
-Add support for Tempiro Devices.
+Tempiro is a solution based on a patent application to control devices via fuses, a unique innovation that can easily make your home smarter, more comfortable and more energy efficient.
