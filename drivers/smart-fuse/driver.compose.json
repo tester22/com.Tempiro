@@ -11,6 +11,9 @@
     "meter_power",
     "onoff"
   ],
+  "energy": {
+    "batteries": ["INTERNAL"]
+  },
   "capabilitiesOptions": {
     "measure_power": {
       "approximated": true
