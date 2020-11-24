@@ -1,6 +1,6 @@
 {
   "id": "com.tempiro",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "brandColor": "#47a74b",
@@ -8,7 +8,7 @@
     "en": "Tempiro"
   },
   "description": {
-    "en": "Tempiro devices for Homey"
+    "en": "Smart Heating Made Easy"
   },
   "category": [
     "appliances"
