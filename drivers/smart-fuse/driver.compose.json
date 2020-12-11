@@ -12,7 +12,7 @@
     "onoff"
   ],
   "energy": {
-    "batteries": ["INTERNAL"]
+    "batteries": ["CR2477"]
   },
   "capabilitiesOptions": {
     "measure_power": {
