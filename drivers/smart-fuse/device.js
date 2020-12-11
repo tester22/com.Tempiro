@@ -32,6 +32,22 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
       this.addCapability('alarm_fuse');
     }
 
+    if (this.getCapabilityValue('alarm_fuse') == null) {
+      this.setCapabilityValue('alarm_fuse', false);
+    }
+
+    if (this.getCapabilityValue('alarm_battery') == null) {
+      this.setCapabilityValue('alarm_battery', false);
+    }
+
+    if (this.getCapabilityValue('meter_power') == null) {
+      this.setCapabilityValue('meter_power', 0.0);
+    }
+
+    if (this.getCapabilityValue('measure_power') == null) {
+      this.setCapabilityValue('measure_power', 0.0);
+    }
+
     if (this.hasCapability('onoff')) {
       this.registerCapability('onoff', CLUSTER.ON_OFF, {
         reportOpts: {
@@ -77,6 +93,13 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
         this.setCapabilityValue('measure_power', parsedDemand);
       }
     });
+  }
+
+  async onSettings(oldSettingsObj, newSettingsObj, changedKeysArr){
+    // If reportfuse is changes set value to null
+    if (changedKeysArr.includes("reportfuse")) {
+      this.setCapabilityValue('alarm_fuse', null);
+    }
   }
 
 }
