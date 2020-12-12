@@ -10,5 +10,8 @@
   },
   "1.0.3": {
     "en": "changed app description"
+  },
+  "1.0.4": {
+    "en": "_Added new icons. _Fixed clear out fuse alarm on changed settings."
   }
 }
