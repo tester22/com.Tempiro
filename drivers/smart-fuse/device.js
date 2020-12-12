@@ -95,12 +95,18 @@ class TempiroSmartFuseDevice extends ZigBeeDevice {
     });
   }
 
-  async onSettings(oldSettingsObj, newSettingsObj, changedKeysArr){
-    // If reportfuse is changes set value to null
-    if (changedKeysArr.includes("reportfuse")) {
-      this.setCapabilityValue('alarm_fuse', null);
+  async onSettings(oldSettings, newSettings, changedKeys) {
+    // check and update settings
+    if (oldSettings.changedKeys && oldSettings.changedKeys.length) {
+      for (let i = 0; i < oldSettings.changedKeys.length; i++) {
+        if (oldSettings.changedKeys[i] == 'reportfuse') {
+          this.log('Changed reportfuse settings');
+          await this.setCapabilityValue('alarm_fuse', false);
+          await this.setCapabilityValue('alarm_fuse', null);
+        }
+      }
     }
-  }
+  } // end onSettings
 
 }
 /*
